@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:scheme_package/utils/color_tools.dart';
+import 'package:scheme_package/src/utils/color_tools.dart';
 
 class CustomWaveBackground extends StatelessWidget {
 	final Color accentColor;

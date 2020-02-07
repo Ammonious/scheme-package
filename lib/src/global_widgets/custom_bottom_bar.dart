@@ -1,9 +1,9 @@
 import 'package:boxicons_flutter/boxicons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:scheme_package/utils/constants.dart';
-import 'package:scheme_package/utils/color_tools.dart';
-import 'package:scheme_package/ui/gradients.dart';
-import 'package:scheme_package/ui/styles.dart';
+import 'package:scheme_package/src/utils/constants.dart';
+import 'package:scheme_package/src/utils/color_tools.dart';
+import 'package:scheme_package/src/ui/gradients.dart';
+import 'package:scheme_package/src/ui/styles.dart';
 class CustomBottomBar extends StatelessWidget {
 	final Function onTapPrimary;
 	final Function onTapSecondary;

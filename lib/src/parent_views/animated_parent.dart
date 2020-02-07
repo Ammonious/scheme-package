@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:scheme_package/decorations/bubble_decoration.dart';
-import 'package:scheme_package/decorations/logo_decoration.dart';
-import 'package:scheme_package/global_widgets/custom_app_bar.dart';
-import 'package:scheme_package/global_widgets/custom_bottom_bar.dart';
-import 'package:scheme_package/utils/constants.dart';
-import 'package:scheme_package/utils/color_tools.dart';
+import 'package:scheme_package/src/decorations/bubble_decoration.dart';
+import 'package:scheme_package/src/decorations/logo_decoration.dart';
+import 'package:scheme_package/src/global_widgets/custom_app_bar.dart';
+import 'package:scheme_package/src/global_widgets/custom_bottom_bar.dart';
+import 'package:scheme_package/src/utils/constants.dart';
+import 'package:scheme_package/src/utils/color_tools.dart';
 
 enum SlideDirection { Vertical, Horizontal }
 

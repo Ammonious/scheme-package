@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:scheme_package/global_widgets/custom_image.dart';
-import 'package:scheme_package/utils/constants.dart';
-import 'package:scheme_package/utils/scroll_methods.dart';
+import 'package:scheme_package/src/global_widgets/custom_image.dart';
+import 'package:scheme_package/src/utils/constants.dart';
+import 'package:scheme_package/src/utils/scroll_methods.dart';
 
 import 'bubble_decoration.dart';
 import 'decoration_positioner.dart';

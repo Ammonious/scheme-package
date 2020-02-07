@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:scheme_package/utils/color_tools.dart';
+import 'package:scheme_package/src/utils/color_tools.dart';
 
 import 'bubble_decoration.dart';
 import 'decoration_positioner.dart';

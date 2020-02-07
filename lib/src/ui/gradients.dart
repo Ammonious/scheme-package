@@ -1,4 +1,4 @@
-import 'package:scheme_package/utils/color_tools.dart';
+import 'package:scheme_package/src/utils/color_tools.dart';
 import 'package:flutter/material.dart';
 
 createGradient({Color color, Color colorOne, Color colorTwo, Alignment begin, Alignment end}) {

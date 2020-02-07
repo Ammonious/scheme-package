@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scheme_package/utils/constants.dart';
+import 'package:scheme_package/src/utils/constants.dart';
 
 import 'image_fade.dart';
 
