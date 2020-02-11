@@ -10,12 +10,15 @@ dependencies:
   flutter:
     sdk: flutter
 
-  color: ^2.1.1
-  flutter_custom_clippers: ^1.1.0
-  google_fonts: ^0.3.7
-  boxicons_flutter: ^1.1.0
-  flutter_icons: ^1.0.0+1
-  flutter_staggered_animations: ^0.1.2
+  color:
+  flutter_custom_clippers:
+  google_fonts:
+  boxicons_flutter:
+  flutter_icons:
+  flutter_staggered_animations:
+  cached_network_image:
+  rxdart:
+  rxdart_codemod:
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:scheme_package/scheme_package.dart';
 import 'package:scheme_package/src/decorations/bubble_decoration.dart';
 import 'package:scheme_package/src/decorations/logo_decoration.dart';
 import 'package:scheme_package/src/global_widgets/custom_app_bar.dart';
@@ -30,7 +31,9 @@ class AnimatedBody extends StatefulWidget {
   final Function onBackPressed;
   final BubbleDecoration bubbleDecoration;
   final LogoDecoration logoDecoration;
+  final CustomWaveBackground waveBackground;
   final CustomBottomBar customBottomBar;
+  final Widget customBackButton;
   final double animationOffset;
   AnimatedBody(
       {Key key,
@@ -55,7 +58,9 @@ class AnimatedBody extends StatefulWidget {
       this.logoDecoration,
       this.customBottomBar,
       this.onBackPressed,
-      this.animationOffset = 72})
+      this.animationOffset = 72,
+      this.waveBackground,
+      this.customBackButton})
       : super(key: key);
 
   @override
@@ -63,7 +68,7 @@ class AnimatedBody extends StatefulWidget {
 }
 
 class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMixin {
-  ScrollController get scrollController => widget.scrollController ?? ScrollController();
+  ScrollController  scrollController = ScrollController();
   AnimationController animationController;
   Animation<double> topBarAnimation;
   Animatable<Color> animateText;
@@ -73,6 +78,14 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
   double scrollOffset = 0.00;
   double get threshold => widget.animationOffset;
 
+
+  get waveBackground => widget.waveBackground != null
+      ? CustomWaveBackground(
+          accentColor: widget.waveBackground.accentColor,
+          primaryColor: widget.waveBackground.primaryColor,
+          gradient: widget.waveBackground.gradient,
+        )
+      : null;
   get logoDecoration => widget.logoDecoration != null
       ? LogoDecoration(
           imageUrl: widget.logoDecoration.imageUrl,
@@ -82,14 +95,15 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
           verticalPadding: widget.logoDecoration.verticalPadding,
           horizontalPadding: widget.logoDecoration.horizontalPadding,
           beginningOpacity: widget.logoDecoration.beginningOpacity,
-          size: widget.logoDecoration.size,
+          height: widget.logoDecoration.height,
+          width: widget.logoDecoration.width,
           scrollController: scrollController,
         )
       : null;
   get bubbleDecoration => widget.bubbleDecoration != null
       ? BubbleDecoration(
           mainBubbleSize: widget.bubbleDecoration.mainBubbleSize,
-          innerBubbleSize: widget.bubbleDecoration.innerBubbleSize,
+          innerBubbleSize:  widget.bubbleDecoration.innerBubbleSize,
           position: widget.bubbleDecoration.position,
           scrollController: scrollController,
           color: widget.bubbleDecoration.color,
@@ -106,6 +120,8 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
           primaryTitle: widget.customBottomBar.primaryTitle,
           primaryColor: widget.customBottomBar.primaryColor,
           primaryIcon: widget.customBottomBar.primaryIcon,
+          stylePrimary: widget.customBottomBar.stylePrimary,
+          styleSecondary: widget.customBottomBar.styleSecondary,
           secondaryEnabled: widget.customBottomBar.secondaryEnabled,
           secondaryColor: widget.customBottomBar.secondaryColor,
           secondaryTitle: widget.customBottomBar.secondaryTitle,
@@ -139,12 +155,9 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
       color: widget.backgroundColor,
       child: Stack(
         children: <Widget>[
-          Stack(
-            children: <Widget>[
-              if (logoDecoration != null) logoDecoration,
-              if (bubbleDecoration != null) bubbleDecoration
-            ],
-          ),
+          if (waveBackground != null) waveBackground,
+          if (widget.logoDecoration != null) logoDecoration,
+          if (bubbleDecoration != null) bubbleDecoration,
           Align(
             alignment: Alignment.topCenter,
             child: NotificationListener<ScrollNotification>(
@@ -155,8 +168,7 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
                 controller: scrollController ?? ScrollController(),
                 padding: EdgeInsets.only(
                   bottom: widget.paddingBottom,
-                  top: widget.topPadding ??
-                      appbarWithPadding(context) + 24,
+                  top: widget.topPadding ?? appbarWithPadding(context) + 24,
                 ),
                 itemCount: animatedList().length,
                 itemBuilder: (context, index) {
@@ -178,7 +190,8 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
             top: 0,
             left: 0,
             right: 0,
-            child: Visibility(visible: widget.showAppBar,
+            child: Visibility(
+              visible: widget.showAppBar,
               child: CustomAppBar(
                 scrollController: scrollController,
                 enableBack: widget.enableBack,
@@ -194,6 +207,14 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
               ),
             ),
           ),
+          AnimatedPositioned(
+              duration: normalDuration,
+              top: MediaQuery.of(context).padding.top + 16,
+              left: 16,
+              child: Visibility(
+                visible: widget.customBackButton != null,
+                child: widget.customBackButton ?? Container(),
+              )),
         ],
       ),
     );
@@ -244,7 +265,7 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
     );
   }
 
-  handleScrollNotifications(ScrollNotification scrollNotification){
+  handleScrollNotifications(ScrollNotification scrollNotification) {
     if (scrollNotification is ScrollUpdateNotification) {
       setState(() {
         scrollOffset = scrollNotification.metrics.pixels;
@@ -277,5 +298,8 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
         });
       }
     }
+
   }
+
+
 }

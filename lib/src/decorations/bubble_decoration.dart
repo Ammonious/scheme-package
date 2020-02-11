@@ -104,58 +104,6 @@ class _BubbleDecorationState extends State<BubbleDecoration> {
 		);
 	}
 
-	isTop() {
-		switch (position) {
-			case BubblePosition.TopRight:
-				return true;
-			case BubblePosition.TopLeft:
-				return true;
-			case BubblePosition.BottomRight:
-				return false;
-			case BubblePosition.BottomLeft:
-				return false;
-		}
-	}
-
-	isBottom() {
-		switch (position) {
-			case BubblePosition.TopRight:
-				return false;
-			case BubblePosition.TopLeft:
-				return false;
-			case BubblePosition.BottomRight:
-				return true;
-			case BubblePosition.BottomLeft:
-				return true;
-		}
-	}
-
-	isRight() {
-		switch (position) {
-			case BubblePosition.TopRight:
-				return true;
-			case BubblePosition.TopLeft:
-				return false;
-			case BubblePosition.BottomRight:
-				return true;
-			case BubblePosition.BottomLeft:
-				return false;
-		}
-	}
-
-	isLeft() {
-		switch (position) {
-			case BubblePosition.TopRight:
-				return false;
-			case BubblePosition.TopLeft:
-				return true;
-			case BubblePosition.BottomRight:
-				return false;
-			case BubblePosition.BottomLeft:
-				return true;
-		}
-	}
-
 	scrollListener(double offset){
 		if (offset >= 200) {
 			if (mainBubbleSize.height != 0.0) {

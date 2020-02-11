@@ -9,7 +9,6 @@ import 'decoration_positioner.dart';
 
 class LogoDecoration extends StatefulWidget {
   final String imageUrl;
-  final double size;
   final double width;
   final double height;
   final Color brandColor;
@@ -23,7 +22,6 @@ class LogoDecoration extends StatefulWidget {
   LogoDecoration({
     Key key,
     this.imageUrl,
-    this.size = 350,
     this.beginningOpacity = 0.35,
     this.horizontalPadding = -100,
     this.verticalPadding = -175,
@@ -58,37 +56,41 @@ class _LogoDecorationState extends State<LogoDecoration> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        DecorationPositionView(
-          horizontalPosition: widget.horizontalPadding,
-          verticalPosition: widget.verticalPadding,
-          position: widget.position,
-          child: CustomImage(
-            imageUrl: widget.imageUrl,
-            width: widget.width,
-            height: widget.height,
-          ),
-        ),
-        DecorationPositionView(
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 500),
-            height: widget.size,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                stops: [0.3, 1],
-                colors: [widget.backgroundColor, widget.backgroundColor.withOpacity(opacity)],
-              ),
+    return AnimatedContainer(duration: normalDuration,
+      child: Stack(
+        children: <Widget>[
+          DecorationPositionView(
+            horizontalPosition: widget.horizontalPadding,
+            verticalPosition: widget.verticalPadding,
+            position: widget.position,
+            child: CustomImage(
+              imageUrl: widget.imageUrl,
+              width: widget.width,
+              height: widget.height,
             ),
           ),
-          position: widget.position,
-          horizontalPosition: 0,
-          verticalPosition: 0,
-        )
-      ],
+          DecorationPositionView(
+            child: Visibility(visible: widget.enableOverlay,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 500),
+                height: widget.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    stops: [0.3, 1],
+                    colors: [widget.backgroundColor, widget.backgroundColor.withOpacity(opacity)],
+                  ),
+                ),
+              ),
+            ),
+            position: widget.position,
+            horizontalPosition: 0,
+            verticalPosition: 0,
+          )
+        ],
+      ),
     );
   }
 }
