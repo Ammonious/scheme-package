@@ -24,14 +24,14 @@ class CustomWaveBackground extends StatelessWidget {
           ClipPath(
             clipper: WaveClipperTwo(),
             child: Container(
-              height:height ?? MediaQuery.of(context).size.height * 0.45,
+              height:height + MediaQuery.of(context).size.height * 0.05 ?? MediaQuery.of(context).size.height * 0.45,
               color: accentColor.shade700.withOpacity(0.25),
             ),
           ),
           ClipPath(
             clipper: WaveClipperOne(),
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.4,
+              height: height ?? MediaQuery.of(context).size.height * 0.4,
               decoration: BoxDecoration(
                   gradient: gradient ?? createGradient(color: primaryColor ?? Colors.blue)),
             ),

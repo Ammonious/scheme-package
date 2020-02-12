@@ -28,6 +28,7 @@ class DropDownFormField extends FormField<dynamic> {
 	final TextStyle hintStyle;
 	final Color borderColor;
 	final bool enabled;
+	final bool alignDropdown;
 	final String imageUrl;
 	DropDownFormField(
 			{this.imageUrl,
@@ -42,6 +43,7 @@ class DropDownFormField extends FormField<dynamic> {
 				this.hintStyle,
 				this.noBorder = false,
 				this.showIcon = false,
+				this.alignDropdown = false,
 				this.titleText = 'Title',
 				this.hintText = 'Select one option',
 				this.required = false,
@@ -85,7 +87,7 @@ class DropDownFormField extends FormField<dynamic> {
 						child: DropdownButtonHideUnderline(
 							child: ButtonTheme(
 								padding: EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
-								alignedDropdown: true,
+								alignedDropdown: alignDropdown,
 								child: DropdownButton<dynamic>(
 									icon: Icon(
 										Boxicons.bxChevronDown,

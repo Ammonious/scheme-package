@@ -23,6 +23,7 @@ class CustomDropDown extends StatelessWidget {
   final bool enabled;
   final Color borderColor;
   final String imageUrl;
+  final bool alignDropdown;
   CustomDropDown({
     Key key,
     this.activeColor = Colors.blue,
@@ -44,7 +45,7 @@ class CustomDropDown extends StatelessWidget {
     this.noBorder = false,
     this.enabled = true,
     this.borderColor = Colors.grey,
-    this.imageUrl,
+    this.imageUrl, this.alignDropdown = false,
   }) : super(key: key);
 
   @override
@@ -63,6 +64,7 @@ class CustomDropDown extends StatelessWidget {
         imageUrl: imageUrl,
         value: value,
         dataSource: dataSource,
+        alignDropdown: alignDropdown,
         textField: 'display',
         valueField: 'value',
         hintStyle: hintStyle,

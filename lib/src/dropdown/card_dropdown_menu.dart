@@ -25,6 +25,7 @@ class CardDropDown extends StatelessWidget {
   final bool enabled;
   final String imageUrl;
   final List<BoxShadow> boxShadow;
+  final bool alignDropdown;
   CardDropDown({
     Key key,
     this.activeColor = Colors.blue,
@@ -46,7 +47,7 @@ class CardDropDown extends StatelessWidget {
     this.hintStyle,
     this.enabled = true,
     this.cardColor = Colors.white,
-    this.imageUrl, this.boxShadow,
+    this.imageUrl, this.boxShadow, this.alignDropdown = false,
   }) : super(key: key);
 
   @override
@@ -69,6 +70,7 @@ class CardDropDown extends StatelessWidget {
             errorText: errorText,
             imageUrl: imageUrl,
             noBorder: false,
+            alignDropdown: alignDropdown,
             borderColor: Colors.transparent,
             value: value,
             dataSource: dataSource,

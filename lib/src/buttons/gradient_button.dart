@@ -37,7 +37,7 @@ class GradientButton extends StatelessWidget {
 			height: height,
 			width: width,
 			decoration: superellipseShape
-					? superEllipseDecoration(boxShadow,gradient ?? createGradient(color: color))
+					? superEllipseDecoration(boxShadow,gradient ?? createGradient(color: color),borderRadius)
 					: regularThemeDecoration(boxShadow,gradient ??  createGradient(color: color),
 					borderRadius ?? BorderRadius.circular(12)),
 			child: Material(

@@ -49,4 +49,6 @@ enum ConnectivityStatus { CONNECTED, OFFLINE }
 	BoxShadow(blurRadius: 7.5, color: Colors.black.withOpacity(0.35), offset: Offset(0, 4))
 ];
 
-
+List<BoxShadow> flatShadow = [
+	BoxShadow(blurRadius: 0, color: Colors.black.withOpacity(0.0), offset: Offset(0, 0))
+];

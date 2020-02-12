@@ -6,13 +6,10 @@ import 'package:scheme_package/src/forms/form_constants.dart';
 import 'package:scheme_package/src/textfields/card_textfield.dart';
 import 'package:scheme_package/src/textfields/custom_text_field.dart';
 
-class PaymentForm extends StatelessWidget {
+class PaymentForm extends StatefulWidget {
   final TextEditingController cardNumberController;
   final TextEditingController expirationController;
   final TextEditingController cvcController;
-  final FocusNode cardFocus = FocusNode();
-  final FocusNode expirationFocus = FocusNode();
-  final FocusNode cvcFocus = FocusNode();
   final FormFieldStyle fieldStyle;
   final TextStyle textStyle;
   final bool showIcon;
@@ -33,13 +30,22 @@ class PaymentForm extends StatelessWidget {
       : super(key: key);
 
   @override
+  _PaymentFormState createState() => _PaymentFormState();
+}
+
+class _PaymentFormState extends State<PaymentForm> {
+    FocusNode cardFocus = FocusNode();
+   FocusNode expirationFocus = FocusNode();
+   FocusNode cvcFocus = FocusNode();
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           textField('Credit Card', cardFocus, expirationFocus, Boxicons.bxCreditCard,
-              cardNumberController, ccFormatter),
+              widget.cardNumberController, ccFormatter),
           SizedBox(
             height: 16,
           ),
@@ -48,14 +54,14 @@ class PaymentForm extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Expanded(child: textField('Expiration Date (MM/YY)', expirationFocus, cvcFocus, Boxicons.bxCalendar,
-                  expirationController, expFormatter),),
+                  widget.expirationController, expFormatter),),
               SizedBox(
                 width: 16,
               ),
               Container(
                 width: 150,
                 child: textField(
-                    'CVC', cvcFocus, null, Boxicons.bxShieldAlt, cvcController, cvcFormatter),
+                    'CVC', cvcFocus, null, Boxicons.bxShieldAlt, widget.cvcController,amexFormatter),
               )
             ],
           )
@@ -72,7 +78,7 @@ class PaymentForm extends StatelessWidget {
     TextEditingController controller,
     TextInputFormatter formatter,
   ) {
-    switch (fieldStyle) {
+    switch (widget.fieldStyle) {
       case FormFieldStyle.Card:
         // TODO: Handle this case.
         return CardTextField(
@@ -82,13 +88,13 @@ class PaymentForm extends StatelessWidget {
           iconData: iconData,
           controller: controller,
           inputFormatters: [formatter],
-          showIcon: showIcon,
-          brandColor: themeColor,
-          textColor: textColor,
-          hintColor: hintColor,
+          showIcon: widget.showIcon,
+          brandColor: widget.themeColor,
+          textColor: widget.textColor,
+          hintColor: widget.hintColor,
           inputType: TextInputType.number,
-          backgroundColor: cardColor,
-          textStyle: textStyle,
+          backgroundColor: widget.cardColor,
+          textStyle: widget.textStyle,
         );
       case FormFieldStyle.Outline:
         // TODO: Handle this case.
@@ -97,13 +103,13 @@ class PaymentForm extends StatelessWidget {
           controller: controller,
           focusNode: focusNode,
           nextNode: nextFocus,
-          textColor: textColor,
-          hintColor: hintColor,
+          textColor: widget.textColor,
+          hintColor: widget.hintColor,
           iconData: iconData,
           inputFormatters: [formatter],
-          showIcon: showIcon,
+          showIcon: widget.showIcon,
           textInputType: TextInputType.number,
-          textStyle: textStyle,
+          textStyle: widget.textStyle,
         );
     }
   }

@@ -14,6 +14,7 @@ class ThemeGradientIconButton extends StatelessWidget {
 	final double padding;
 	final Color color;
 	final LinearGradient gradient;
+	final BorderRadius borderRadius;
 	ThemeGradientIconButton({
 		                        Key key,
 		                        this.onTap,
@@ -22,7 +23,7 @@ class ThemeGradientIconButton extends StatelessWidget {
 		                        this.icon = Boxicons.bxCheck,
 		                        this.iconSize = 24,
 		                        this.iconColor = nearlyBlack,
-		                        this.padding = 0, this.color = Colors.white, this.gradient,
+		                        this.padding = 0, this.color = Colors.white, this.gradient, this.borderRadius,
 	                        }) : super(key: key);
 
 	@override
@@ -32,12 +33,12 @@ class ThemeGradientIconButton extends StatelessWidget {
 			height: size,
 			width: size,
 			padding: EdgeInsets.all(padding),
-			decoration: superEllipseDecoration(boxShadow,gradient ?? createGradient(color: color)),
+			decoration: superEllipseDecoration(boxShadow,gradient ?? createGradient(color: color),borderRadius),
 			child: Material(
 				color: Colors.transparent,
 				child: InkWell(
 					splashColor: Colors.black.withOpacity(0.4),
-					borderRadius: borderRadius,
+					borderRadius: borderRadius ?? BorderRadius.circular(28),
 					onTap: () => onTap(),
 					child: Container(
 						child: Center(
@@ -53,9 +54,5 @@ class ThemeGradientIconButton extends StatelessWidget {
 		);
 	}
 
-	get borderRadius => BorderRadius.only(
-			topLeft: Radius.circular(24),
-			topRight: Radius.circular(24),
-			bottomLeft: Radius.circular(4),
-			bottomRight: Radius.circular(24));
+
 }

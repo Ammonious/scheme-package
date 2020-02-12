@@ -25,6 +25,8 @@ export 'src/utils/color_tools.dart';
 export 'src/utils/constants.dart';
 export 'src/utils/scroll_methods.dart';
 export 'src/utils/text_scale.dart';
+export 'src/utils/math_utils.dart';
+export 'src/utils/extension_methods.dart';
 
 export 'src/ui/gradients.dart';
 export 'src/ui/styles.dart';

@@ -68,7 +68,7 @@ class AnimatedBody extends StatefulWidget {
 }
 
 class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMixin {
-  ScrollController  scrollController = ScrollController();
+  ScrollController scrollController = ScrollController();
   AnimationController animationController;
   Animation<double> topBarAnimation;
   Animatable<Color> animateText;
@@ -78,12 +78,12 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
   double scrollOffset = 0.00;
   double get threshold => widget.animationOffset;
 
-
   get waveBackground => widget.waveBackground != null
       ? CustomWaveBackground(
           accentColor: widget.waveBackground.accentColor,
           primaryColor: widget.waveBackground.primaryColor,
           gradient: widget.waveBackground.gradient,
+          height: widget.waveBackground.height,
         )
       : null;
   get logoDecoration => widget.logoDecoration != null
@@ -103,7 +103,7 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
   get bubbleDecoration => widget.bubbleDecoration != null
       ? BubbleDecoration(
           mainBubbleSize: widget.bubbleDecoration.mainBubbleSize,
-          innerBubbleSize:  widget.bubbleDecoration.innerBubbleSize,
+          innerBubbleSize: widget.bubbleDecoration.innerBubbleSize,
           position: widget.bubbleDecoration.position,
           scrollController: scrollController,
           color: widget.bubbleDecoration.color,
@@ -191,7 +191,7 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
             left: 0,
             right: 0,
             child: Visibility(
-              visible: widget.showAppBar,
+              visible: true,
               child: CustomAppBar(
                 scrollController: scrollController,
                 enableBack: widget.enableBack,
@@ -279,6 +279,7 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
   }
 
   notificationListener(double offset) {
+    animationController.forward();
     if (offset >= threshold) {
       if (topBarOpacity != 1.0) {
         setState(() {
@@ -298,8 +299,5 @@ class _AnimatedBodyState extends State<AnimatedBody> with TickerProviderStateMix
         });
       }
     }
-
   }
-
-
 }
