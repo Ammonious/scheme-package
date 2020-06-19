@@ -1,6 +1,6 @@
 import 'mask_text_input_formatter.dart';
 
-enum FormFieldStyle { Card, Outline }
+enum SchemeFieldStyle { card, outline,neu }
 
 const List stateAbbreviations = [
   'AL',

@@ -5,47 +5,52 @@ import 'package:scheme_package/scheme_package.dart';
 import 'package:scheme_package/src/forms/form_constants.dart';
 import 'package:scheme_package/src/textfields/card_textfield.dart';
 import 'package:scheme_package/src/textfields/custom_text_field.dart';
+import 'package:scheme_package/src/textfields/keyboard_avoider.dart';
+import 'package:scheme_theme/scheme_theme.dart';
 
-class PaymentForm extends StatefulWidget {
-  final TextEditingController cardNumberController;
-  final TextEditingController expirationController;
-  final TextEditingController cvcController;
-  final FormFieldStyle fieldStyle;
+class PaymentForm extends HookWidget {
+  final SchemeFieldStyle fieldStyle;
   final TextStyle textStyle;
   final bool showIcon;
   final Color textColor;
   final Color hintColor;
   final Color themeColor;
   final Color cardColor;
+  final Function(String cardNumber, String expiration, String cvc) valueListener;
   PaymentForm(
       {Key key,
-     @required this.cardNumberController,
-     @required this.expirationController,
-     @required this.cvcController,
-      this.fieldStyle = FormFieldStyle.Outline,
+      this.fieldStyle = SchemeFieldStyle.outline,
       this.showIcon = false,
+      this.valueListener,
       this.textColor = nearlyBlack,
       this.hintColor = Colors.grey,
-      this.themeColor = Colors.blue, this.cardColor = Colors.white, this.textStyle})
+      this.themeColor = Colors.blue,
+      this.cardColor = Colors.white,
+      this.textStyle})
       : super(key: key);
 
   @override
-  _PaymentFormState createState() => _PaymentFormState();
-}
-
-class _PaymentFormState extends State<PaymentForm> {
-    FocusNode cardFocus = FocusNode();
-   FocusNode expirationFocus = FocusNode();
-   FocusNode cvcFocus = FocusNode();
-
-  @override
   Widget build(BuildContext context) {
+    final cardNumberController = useTextEditingController();
+    final expirationController = useTextEditingController();
+    final cvcController = useTextEditingController();
+    final cardFocus = useFocusNode();
+    final expirationFocus = useFocusNode();
+    final cvcFocus = useFocusNode();
     return Container(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          textField('Credit Card', cardFocus, expirationFocus, Boxicons.bxCreditCard,
-              widget.cardNumberController, ccFormatter),
+          textField(
+              label: 'Credit Card',
+              focusNode: cardFocus,
+              nextFocus: expirationFocus,
+              iconData: Boxicons.bxCreditCard,
+              controller: cardNumberController,
+              formatter: ccFormatter,
+              onChange: (text) => valueListener(
+                  cardNumberController.text, expirationController.text, cvcController.text)),
           SizedBox(
             height: 16,
           ),
@@ -53,15 +58,30 @@ class _PaymentFormState extends State<PaymentForm> {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Expanded(child: textField('Expiration Date (MM/YY)', expirationFocus, cvcFocus, Boxicons.bxCalendar,
-                  widget.expirationController, expFormatter),),
+              Expanded(
+                child: textField(
+                    label: 'Expiration Date (MM/YY)',
+                    focusNode: expirationFocus,
+                    nextFocus: cvcFocus,
+                    iconData: Boxicons.bxCalendar,
+                    controller: expirationController,
+                    formatter: expFormatter,
+                    onChange: (text) => valueListener(
+                        cardNumberController.text, expirationController.text, cvcController.text)),
+              ),
               SizedBox(
                 width: 16,
               ),
               Container(
                 width: 150,
                 child: textField(
-                    'CVC', cvcFocus, null, Boxicons.bxShieldAlt, widget.cvcController,amexFormatter),
+                    label: 'CVC',
+                    focusNode: cvcFocus,
+                    iconData: Boxicons.bxShieldAlt,
+                    controller: cvcController,
+                    formatter: amexFormatter,
+                    onChange: (text) => valueListener(
+                        cardNumberController.text, expirationController.text, cvcController.text)),
               )
             ],
           )
@@ -71,15 +91,15 @@ class _PaymentFormState extends State<PaymentForm> {
   }
 
   textField(
-    String label,
-    FocusNode focusNode,
-    FocusNode nextFocus,
-    IconData iconData,
-    TextEditingController controller,
-    TextInputFormatter formatter,
-  ) {
-    switch (widget.fieldStyle) {
-      case FormFieldStyle.Card:
+      {String label,
+      FocusNode focusNode,
+      FocusNode nextFocus,
+      IconData iconData,
+      TextEditingController controller,
+      TextInputFormatter formatter,
+      Function(String text) onChange}) {
+    switch (fieldStyle) {
+      case SchemeFieldStyle.card:
         // TODO: Handle this case.
         return CardTextField(
           label: label,
@@ -88,28 +108,30 @@ class _PaymentFormState extends State<PaymentForm> {
           iconData: iconData,
           controller: controller,
           inputFormatters: [formatter],
-          showIcon: widget.showIcon,
-          brandColor: widget.themeColor,
-          textColor: widget.textColor,
-          hintColor: widget.hintColor,
+          showIcon: showIcon,
+          brandColor: themeColor,
+          textColor: textColor,
+          hintColor: hintColor,
           inputType: TextInputType.number,
-          backgroundColor: widget.cardColor,
-          textStyle: widget.textStyle,
+          backgroundColor: cardColor,
+          textStyle: textStyle,
+          onChange: (text) => onChange(text),
         );
-      case FormFieldStyle.Outline:
+      case SchemeFieldStyle.outline:
         // TODO: Handle this case.
         return CustomTextField(
           labelText: label,
           controller: controller,
           focusNode: focusNode,
           nextNode: nextFocus,
-          textColor: widget.textColor,
-          hintColor: widget.hintColor,
+          textColor: textColor,
+          hintColor: hintColor,
           iconData: iconData,
           inputFormatters: [formatter],
-          showIcon: widget.showIcon,
+          showIcon: showIcon,
           textInputType: TextInputType.number,
-          textStyle: widget.textStyle,
+          textStyle: textStyle,
+          onChange: (text) => onChange(text),
         );
     }
   }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:scheme_package/src/decorations/superellipse_shape.dart';
-import 'package:scheme_package/src/utils/constants.dart';
+import 'package:scheme_package/src/decorations/shapes/superellipse_shape.dart';
+import 'package:scheme_theme/scheme_theme.dart';
 
 ShapeDecoration superEllipseDecoration(List<BoxShadow> boxShadow, LinearGradient gradient,BorderRadius borderRadius) =>
 		ShapeDecoration(
 			gradient: gradient,
-			shadows: boxShadow ?? liftedShadow,
+			shadows: boxShadow ?? flatShadow,
 			shape: SuperellipseShape(
 				borderRadius:borderRadius ?? BorderRadius.circular(28),
 			),
@@ -15,10 +15,10 @@ BoxDecoration regularThemeDecoration(
 		List<BoxShadow> boxShadow, LinearGradient gradient, BorderRadius borderRadius) =>
 		BoxDecoration(boxShadow: boxShadow, gradient: gradient, borderRadius: borderRadius);
 
-ShapeDecoration superEllipseOutline(double borderWidth, Color borderColor) => ShapeDecoration(
+ShapeDecoration superEllipseOutline(double borderWidth, Color borderColor,{BorderRadius borderRadius}) => ShapeDecoration(
 	shape: SuperellipseShape(
 		side: BorderSide(width: borderWidth, color: borderColor),
-		borderRadius: BorderRadius.circular(28.0),
+		borderRadius:borderRadius ?? BorderRadius.circular(28.0),
 	),
 );
 

@@ -1,20 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:scheme_package/scheme_package.dart';
-import 'package:scheme_package/src/utils/color_tools.dart';
+import 'package:scheme_theme/scheme_theme.dart';
 
-class CustomWaveBackground extends StatelessWidget {
+class CustomWaveBackground extends StatefulWidget {
   final Color accentColor;
   final Color primaryColor;
   final LinearGradient gradient;
   final double height;
+  final ScrollController scrollController;
+  final bool enableAnimation;
   CustomWaveBackground({
     Key key,
     this.accentColor = Colors.blue,
     this.primaryColor,
-    this.gradient, this.height,
+    this.gradient, this.height = 300, this.scrollController, this.enableAnimation = true,
   }) : super(key: key);
 
+  @override
+  _CustomWaveBackgroundState createState() => _CustomWaveBackgroundState();
+}
+
+class _CustomWaveBackgroundState extends State<CustomWaveBackground> {
+  ScrollController get scrollController => widget.scrollController ?? ScrollController();
+  double height;
+  double accentHeight;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    height = widget.height;
+    accentHeight = widget.height + 85;
+    double originalAccent = accentHeight + 85;
+
+    if(widget.enableAnimation){
+      scrollController.addListener(() {
+        setState(() {
+          height = calc(widget.height) > 0 ? calc(widget.height) : 0;
+          accentHeight = calc(originalAccent) > 0 ? calc(originalAccent) : 0;
+        });
+      });
+    }
+
+
+  }
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -23,21 +52,24 @@ class CustomWaveBackground extends StatelessWidget {
         children: <Widget>[
           ClipPath(
             clipper: WaveClipperTwo(),
-            child: Container(
-              height:height + MediaQuery.of(context).size.height * 0.05 ?? MediaQuery.of(context).size.height * 0.45,
-              color: accentColor.shade700.withOpacity(0.25),
+            child: AnimatedContainer(duration: Duration(milliseconds: 500),
+              height:accentHeight,
+              color: widget.accentColor.shade700.withOpacity(0.25),
             ),
           ),
           ClipPath(
             clipper: WaveClipperOne(),
-            child: Container(
-              height: height ?? MediaQuery.of(context).size.height * 0.4,
+            child: AnimatedContainer(duration: Duration(milliseconds: 500),
+              height: height,
               decoration: BoxDecoration(
-                  gradient: gradient ?? createGradient(color: primaryColor ?? Colors.blue)),
+                  gradient: widget.gradient ?? schemeGradient(color: widget.primaryColor ?? Colors.blue)),
             ),
           ),
         ],
       ),
     );
+  }
+  calc(double originalAmount){
+   return originalAmount - (285 * (scrollController.offset / 100));
   }
 }

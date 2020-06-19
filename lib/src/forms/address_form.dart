@@ -1,16 +1,14 @@
 import 'package:boxicons_flutter/boxicons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:scheme_package/src/textfields/keyboard_avoider.dart';
+import 'package:scheme_theme/scheme_theme.dart';
 
 import '../../scheme_package.dart';
 import 'form_constants.dart';
 
-class AddressForm extends StatefulWidget {
-  final TextEditingController nameController;
-  final TextEditingController addressController;
-  final TextEditingController cityController;
-  final TextEditingController zipController;
-  final FormFieldStyle fieldStyle;
+class AddressForm extends HookWidget {
+  final SchemeFieldStyle fieldStyle;
   final TextStyle textStyle;
   final bool showIcon;
   final Color textColor;
@@ -18,91 +16,148 @@ class AddressForm extends StatefulWidget {
   final Color themeColor;
   final Color cardColor;
   final double spacing;
+  final bool showPhoneField;
+  final List<BoxShadow> boxShadow;
   final Function(String state) onSelectState;
+  final Function(String name,String phone, String email, String address, String city, String zip) valueListener;
   final String selectedState;
-
-  AddressForm(
-      {Key key,
-      this.nameController,
-      this.addressController,
-      this.cityController,
-      this.fieldStyle = FormFieldStyle.Outline,
-      this.showIcon = false,
-      this.textColor = nearlyBlack,
-      this.hintColor = Colors.grey,
-      this.themeColor = Colors.blue,
-      this.cardColor = Colors.white,
-      this.spacing = 16,
-      this.onSelectState,
-      this.selectedState,
-      this.textStyle,
-      this.zipController})
-      : super(key: key);
-
-  @override
-  _AddressFormState createState() => _AddressFormState();
-}
-
-class _AddressFormState extends State<AddressForm> {
-  FocusNode nameFocus = FocusNode();
-  FocusNode addressFocus = FocusNode();
-  FocusNode lineTwoFocus = FocusNode();
-  FocusNode cityFocus = FocusNode();
-  FocusNode zipFocus = FocusNode();
+  AddressForm(  {this.showPhoneField = false,
+    Key key,
+    this.fieldStyle = SchemeFieldStyle.outline,this.boxShadow,
+    this.showIcon = false,
+    this.textColor = nearlyBlack,
+    this.hintColor = Colors.grey,
+    this.themeColor = Colors.blue,
+    this.cardColor = Colors.white,
+    this.spacing = 16,
+    this.onSelectState,
+    this.textStyle,
+    @required this.valueListener,
+    this.selectedState,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final nameController = useTextEditingController();
+    final phoneController = useTextEditingController();
+    final emailController = useTextEditingController();
+    final addressController = useTextEditingController();
+    final cityController = useTextEditingController();
+    final zipController = useTextEditingController();
+    final nameFocus = useFocusNode();
+    final phoneFocus = useFocusNode();
+    final emailFocus = useFocusNode();
+    final addressFocus = useFocusNode();
+    final lineTwoFocus = useFocusNode();
+    final cityFocus = useFocusNode();
+    final zipFocus = useFocusNode();
+    final stateNotifier = useState();
+
     return Material(
       color: Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          textField('Full Name', nameFocus, addressFocus, Boxicons.bxUserCircle,
-              widget.nameController, TextInputType.text),
+          textField('Full Name', nameFocus, showPhoneField ? phoneFocus : emailFocus, Boxicons.bxUserCircle, nameController,
+              TextInputType.text, TextCapitalization.words,
+              nameController: nameController,
+              emailController: emailController,
+              addressController: addressController,
+              cityController: cityController,
+              zipController: zipController),
           SizedBox(
-            height: widget.spacing,
+            height: spacing,
           ),
-          textField('Address', addressFocus, cityFocus, Boxicons.bxHomeAlt,
-              widget.addressController, TextInputType.visiblePassword),
+          Visibility(visible: showPhoneField,child: Column(children: <Widget>[
+            textField('Phone', phoneFocus, emailFocus, Boxicons.bxEnvelope, emailController,
+                TextInputType.emailAddress, TextCapitalization.none,
+                nameController: nameController,
+                emailController: emailController,
+                textInputFormatter: phoneFormatter,
+                phoneController: phoneController,
+                addressController: addressController,
+                cityController: cityController,
+                zipController: zipController),
+            SizedBox(
+              height: spacing,
+            ),
+          ],),),
+
+          textField('Email', emailFocus, addressFocus, Boxicons.bxEnvelope, emailController,
+              TextInputType.emailAddress, TextCapitalization.none,
+              nameController: nameController,
+              emailController: emailController,
+              addressController: addressController,
+              cityController: cityController,
+              zipController: zipController),
           SizedBox(
-            height: widget.spacing,
+            height: spacing,
+          ),
+          textField('Address', addressFocus, cityFocus, Boxicons.bxHomeAlt, addressController,
+              TextInputType.visiblePassword, TextCapitalization.none,
+              nameController: nameController,
+              emailController: emailController,
+              addressController: addressController,
+              cityController: cityController,
+              zipController: zipController),
+          SizedBox(
+            height: spacing,
           ),
           Row(
             children: <Widget>[
               Expanded(
-                child: textField('City', cityFocus, zipFocus, Boxicons.bxMap, widget.cityController,
-                    TextInputType.text),
+                child: textField('City', cityFocus, zipFocus, Boxicons.bxMap, cityController,
+                    TextInputType.text, TextCapitalization.words,
+                    nameController: nameController,
+                    emailController: emailController,
+                    addressController: addressController,
+                    cityController: cityController,
+                    zipController: zipController),
               ),
               SizedBox(
                 width: 16,
               ),
               Container(
                 width: 100,
-                child: dropDown(),
+                child: dropDown(stateNotifier),
               )
             ],
           ),
           SizedBox(
-            height: widget.spacing,
+            height: spacing,
           ),
-          textField(
-              'Zip', zipFocus, null, Boxicons.bxMapPin, widget.zipController, TextInputType.number),
+          textField('Zip', zipFocus, null, Boxicons.bxMapPin, zipController, TextInputType.number,
+              TextCapitalization.none,
+              nameController: nameController,
+              emailController: emailController,
+              addressController: addressController,
+              cityController: cityController,
+              zipController: zipController),
         ],
       ),
     );
   }
 
+  listener({String name,String phone, String email, String address, String city, String zip}) =>
+      valueListener(name,phone, email, address, city, zip);
+
   textField(
-    String label,
-    FocusNode focusNode,
-    FocusNode nextFocus,
-    IconData iconData,
-    TextEditingController controller,
-    TextInputType inputType,
-  ) {
-    switch (widget.fieldStyle) {
-      case FormFieldStyle.Card:
+      String label,
+      FocusNode focusNode,
+      FocusNode nextFocus,
+      IconData iconData,
+      TextEditingController controller,
+      TextInputType inputType,
+      TextCapitalization textCapitalization,
+      {TextEditingController nameController,
+        TextEditingController phoneController,
+      TextEditingController emailController,
+      TextEditingController addressController,
+      TextEditingController cityController,
+      TextEditingController zipController,TextInputFormatter textInputFormatter}) {
+    switch (fieldStyle) {
+      case SchemeFieldStyle.card:
         // TODO: Handle this case.
         return CardTextField(
           label: label,
@@ -110,54 +165,80 @@ class _AddressFormState extends State<AddressForm> {
           nextFocus: nextFocus,
           iconData: iconData,
           controller: controller,
-          showIcon: widget.showIcon,
-          brandColor: widget.themeColor,
-          textColor: widget.textColor,
-          hintColor: widget.hintColor,
+          textCapitalization: textCapitalization,
+          inputFormatters: [textInputFormatter],
+          boxShadow: boxShadow ?? wideShadow,
+          showIcon: showIcon,
+          brandColor: themeColor,
+          textColor: textColor,
+          hintColor: hintColor,
           inputType: inputType,
-          backgroundColor: widget.cardColor,
+          backgroundColor: cardColor,
+          onChange: (text) => listener(
+              name: nameController.text,
+              phone: phoneController.text,
+              email: emailController.text,
+              address: addressController.text,
+              city: cityController.text,
+              zip: zipController.text),
         );
-      case FormFieldStyle.Outline:
+      case SchemeFieldStyle.outline:
         // TODO: Handle this case.
         return CustomTextField(
           labelText: label,
           controller: controller,
           focusNode: focusNode,
           nextNode: nextFocus,
-          textColor: widget.textColor,
-          hintColor: widget.hintColor,
+          textColor: textColor,
+          hintColor: hintColor,
+          borderColor: hintColor,
+          textCapitalization: textCapitalization,
+          inputFormatters: [textInputFormatter],
           iconData: iconData,
-          showIcon: widget.showIcon,
+          showIcon: showIcon,
           textInputType: inputType,
+          onChange: (text) => listener(
+              name: nameController.text,
+              phone: phoneController.text,
+              email: emailController.text,
+              address: addressController.text,
+              city: cityController.text,
+              zip: zipController.text),
         );
     }
   }
 
-  dropDown() {
-    switch (widget.fieldStyle) {
-      case FormFieldStyle.Outline:
+  dropDown(ValueNotifier stateNotifier) {
+    switch (fieldStyle) {
+      case SchemeFieldStyle.outline:
         // TODO: Handle this case.
         return CustomDropDown(
           dataSource: stateDropDown(),
           showIcon: false,
-          hintColor: widget.hintColor,
-          activeColor: widget.themeColor,
-          hintText: widget.selectedState ?? 'State',
+          hintColor: hintColor,
+          activeColor: themeColor,
+          hintText: selectedState ?? 'State',
           titleText: 'State',
-          hintStyle: widget.textStyle,
-          onChanged: (state) => widget.onSelectState(state),
+          hintStyle: textStyle,
+          onChanged: (state) {
+            stateNotifier.value = state;
+            onSelectState(state);
+          },
         );
-      case FormFieldStyle.Card:
+      case SchemeFieldStyle.card:
         // TODO: Handle this case.
         return CardDropDown(
           dataSource: stateDropDown(),
           showIcon: false,
-          hintColor: widget.hintColor,
-          activeColor: widget.themeColor,
-          hintText: widget.selectedState ?? 'State',
+          hintColor: hintColor,
+          activeColor: themeColor,
+          hintText: stateNotifier.value ?? 'State',
           titleText: 'State',
-          hintStyle: widget.textStyle,
-          onChanged: (state) => widget.onSelectState(state),
+          hintStyle: textStyle,
+          onChanged: (state) {
+            stateNotifier.value = state;
+            onSelectState(state);
+          },
         );
     }
   }

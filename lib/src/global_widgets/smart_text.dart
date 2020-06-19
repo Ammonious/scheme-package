@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scheme_package/src/global_widgets/auto_size_text.dart';
-import 'package:scheme_package/src/utils/color_tools.dart';
-import 'package:scheme_package/src/utils/constants.dart';
+import 'package:scheme_theme/scheme_theme.dart';
+import 'package:scheme_theme/scheme_theme.dart';
 
 class SmartText extends StatelessWidget {
   final Color backgroundColor;

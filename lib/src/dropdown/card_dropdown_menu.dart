@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scheme_package/src/utils/constants.dart';
+import 'package:scheme_theme/scheme_theme.dart';
 
 import 'dropdown_formfield.dart';
 
@@ -26,6 +26,9 @@ class CardDropDown extends StatelessWidget {
   final String imageUrl;
   final List<BoxShadow> boxShadow;
   final bool alignDropdown;
+  final bool isDense;
+  final double imageSize;
+  final bool isExpanded;
   CardDropDown({
     Key key,
     this.activeColor = Colors.blue,
@@ -47,7 +50,7 @@ class CardDropDown extends StatelessWidget {
     this.hintStyle,
     this.enabled = true,
     this.cardColor = Colors.white,
-    this.imageUrl, this.boxShadow, this.alignDropdown = false,
+    this.imageUrl, this.boxShadow, this.alignDropdown = false, this.isDense = true, this.isExpanded = true, this.imageSize,
   }) : super(key: key);
 
   @override
@@ -69,7 +72,10 @@ class CardDropDown extends StatelessWidget {
             required: required,
             errorText: errorText,
             imageUrl: imageUrl,
+            imageSize: imageSize,
             noBorder: false,
+            isExpanded:isExpanded,
+            isDense: isDense,
             alignDropdown: alignDropdown,
             borderColor: Colors.transparent,
             value: value,

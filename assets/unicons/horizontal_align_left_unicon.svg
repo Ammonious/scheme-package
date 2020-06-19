@@ -1,0 +1,7 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="horizontal_align_left">
+<path id="accent" d="M16 10H4V6H15C15.5523 6 16 6.44772 16 7V10Z" fill="#979797" fill-opacity="0.4"/>
+<path id="primary" d="M21 18H4V10H21C21.5523 10 22 10.4477 22 11V17C22 17.5523 21.5523 18 21 18Z" fill="#F9CA24"/>
+<path id="primary_2" d="M3 22C2.44803 22.0003 2.00031 21.5531 2 21.0011C2 21.0008 2 21.0004 2 21V3C2 2.44772 2.44772 2 3 2C3.55228 2 4 2.44772 4 3V21C4.00031 21.552 3.55311 21.9997 3.00114 22C3.00076 22 3.00038 22 3 22Z" fill="#F9CA24" fill-opacity="0.4"/>
+</g>
+</svg>

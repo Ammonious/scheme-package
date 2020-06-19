@@ -1,0 +1,5 @@
+class LottieIcon {
+
+  LottieIcon._();
+
+}

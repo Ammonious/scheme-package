@@ -21,28 +21,34 @@ class DecorationPositionView extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (position) {
       case BubblePosition.TopRight:
-        // TODO: Handle this case.
         return TopRightPosition(
           vPadding: verticalPosition,
           hPadding: horizontalPosition,
           child: child,
         );
       case BubblePosition.TopLeft:
-        // TODO: Handle this case.
         return TopLeftPosition(
           vPadding: verticalPosition,
           hPadding: horizontalPosition,
           child: child,
         );
+      case BubblePosition.TopCenter:
+        return TopCenterPosition(
+          vPadding: verticalPosition,
+          child: child,
+        );
+      case BubblePosition.BottomCenter:
+        return BottomCenterPosition(
+          vPadding: verticalPosition,
+          child: child,
+        );
       case BubblePosition.BottomRight:
-        // TODO: Handle this case.
         return BottomRightPosition(
           vPadding: verticalPosition,
           hPadding: horizontalPosition,
           child: child,
         );
       case BubblePosition.BottomLeft:
-        // TODO: Handle this case.
         return BottomLeftPosition(
           vPadding: verticalPosition,
           hPadding: horizontalPosition,

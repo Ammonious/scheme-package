@@ -25,10 +25,11 @@ class CurrencyTextFieldController extends TextEditingController {
 	CurrencyTextFieldController(
 			{String rightSymbol = "\$",
 				String decimalSymbol = ".",
-				String thousandSymbol = ","})
+				String thousandSymbol = ",", })
 			: _leftSymbol = rightSymbol,
 				_decimalSymbol = decimalSymbol,
-				_thousandSymbol = thousandSymbol {
+				_thousandSymbol = thousandSymbol
+		{
 		addListener(_listener);
 	}
 

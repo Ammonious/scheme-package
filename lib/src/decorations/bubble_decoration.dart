@@ -1,12 +1,49 @@
 
+import 'package:division/division.dart';
 import 'package:flutter/material.dart';
-import 'package:scheme_package/src/utils/constants.dart';
+import 'package:scheme_theme/scheme_theme.dart';
 
 import 'bubble_view.dart';
 
-enum BubblePosition { TopRight, TopLeft, BottomRight, BottomLeft }
+enum BubblePosition { TopRight, TopLeft, BottomRight, BottomLeft, TopCenter,BottomCenter }
 
-class BubbleDecoration extends StatefulWidget {
+class BubbleDecoration extends StatelessWidget {
+	final ParentStyle mainBubbleStyle;
+	final ParentStyle innerBubbleStyle;
+	final BubblePosition position;
+	BubbleDecoration({Key key, this.mainBubbleStyle, this.innerBubbleStyle, this.position}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(color:Colors.transparent,child: Stack(
+	    children: <Widget>[
+		    BubbleView(
+			    size: mainBubbleStyle.exportStyle.height * mainBubbleStyle.exportStyle.scale,
+			    position: position,
+			    vPadding: mainBubbleStyle.exportStyle.offset.dy,
+			    hPadding: mainBubbleStyle.exportStyle.offset.dx,
+			    color: mainBubbleStyle.exportStyle.backgroundColor,
+		    ),
+		    BubbleView(
+			    size: innerBubbleStyle.exportStyle.height * innerBubbleStyle.exportStyle.scale,
+			    position: position,
+			    vPadding: innerBubbleStyle.exportStyle.offset.dy,
+			    hPadding: innerBubbleStyle.exportStyle.offset.dx,
+			    color: innerBubbleStyle.exportStyle.backgroundColor,
+		    ),
+		    BubbleView(
+			    size: (innerBubbleStyle.exportStyle.height / 2) * innerBubbleStyle.exportStyle.scale,
+			    position: position,
+			    vPadding: 8,
+			    hPadding: 0,
+			    color: innerBubbleStyle.exportStyle.backgroundColor,
+		    ),
+	    ],
+    ),);
+  }
+}
+
+class Bubble extends StatefulWidget {
 	final double mainBubbleSize;
 	final double innerBubbleSize;
 	final ScrollController scrollController;
@@ -15,7 +52,8 @@ class BubbleDecoration extends StatefulWidget {
 	final double horizontalOffset;
 	final double verticalOffset;
 	final Color color;
-	BubbleDecoration(
+	final bool enableAnimation;
+	Bubble(
 			{Key key,
 				this.mainBubbleSize = 250,
 				this.innerBubbleSize = 100,
@@ -23,14 +61,14 @@ class BubbleDecoration extends StatefulWidget {
 				this.delayedDuration,
 				this.position = BubblePosition.TopRight,
 				this.horizontalOffset = -150,
-				this.verticalOffset = -100, this.color = Colors.blue})
+				this.verticalOffset = -100, this.color = Colors.blue, this.enableAnimation = true})
 			: super(key: key);
 
 	@override
 	_BubbleDecorationState createState() => _BubbleDecorationState();
 }
 
-class _BubbleDecorationState extends State<BubbleDecoration> {
+class _BubbleDecorationState extends State<Bubble> {
 
 
 	Size mainBubbleSize;
@@ -54,27 +92,30 @@ class _BubbleDecorationState extends State<BubbleDecoration> {
 		mainBubbleSize = Size(widget.mainBubbleSize, widget.mainBubbleSize);
 		innerBubbleSize = Size(widget.innerBubbleSize, widget.innerBubbleSize);
 		accentBubble = Size(widget.innerBubbleSize / 2, widget.innerBubbleSize / 2);
-		scrollController.addListener(() {
-			scrollListener(scrollController.offset);
-		});
-		if (widget.delayedDuration != null) {
-			Future.delayed(widget.delayedDuration, () {
+		if(widget.enableAnimation){
+			scrollController.addListener(() {
+				scrollListener(scrollController.offset);
+			});
+			if (widget.delayedDuration != null) {
+				Future.delayed(widget.delayedDuration, () {
+					setState(() {
+						opacity = 1.0;
+					});
+				});
+			} else {
 				setState(() {
 					opacity = 1.0;
 				});
-			});
-		} else {
-			setState(() {
-				opacity = 1.0;
-			});
+			}
 		}
+
 	}
 
 	@override
 	Widget build(BuildContext context) {
 
 		return AnimatedOpacity(
-			duration: normalDuration,
+			duration: Duration(milliseconds: 200),
 			opacity: opacity,
 			child: Stack(
 				children: <Widget>[

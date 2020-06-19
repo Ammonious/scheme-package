@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:scheme_package/src/ui/styles.dart';
-import 'package:scheme_package/src/utils/constants.dart';
+import 'package:scheme_theme/scheme_theme.dart';
 import 'currency_text_editing_controller.dart';
 import 'textfield_constants.dart';
 
@@ -12,6 +12,7 @@ class CustomTextField extends StatefulWidget {
   final CurrencyTextFieldController currencyController;
   final Function(String text) onSubmit;
   final Function(String text) onChange;
+  final Function onGainedFocus;
   final String labelText;
   final Color hintColor;
   final Color textColor;
@@ -32,6 +33,7 @@ class CustomTextField extends StatefulWidget {
   final bool obscureText;
   final String hintText;
   final TextStyle textStyle;
+  final bool enabled;
   const CustomTextField({
     Key key,
     @required this.controller,
@@ -55,7 +57,11 @@ class CustomTextField extends StatefulWidget {
     this.showIcon = false,
     this.obscureText = false,
     this.hintText,
-    this.textInputAction, this.textStyle, this.currencyController,
+    this.textInputAction,
+    this.textStyle,
+    this.currencyController,
+    this.enabled = true,
+    this.onGainedFocus,
   }) : super(key: key);
 
   @override
@@ -75,7 +81,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
     // TODO: implement initState
     super.initState();
     if (focusNode != null) {
-      focusNode.addListener(() => _focusStreamSubject.add(focusNode.hasFocus));
+      focusNode.addListener(() {
+        _focusStreamSubject.add(focusNode.hasFocus);
+        if (widget.onGainedFocus != null && focusNode.hasFocus) widget.onGainedFocus();
+      });
     }
 
     if (nextNode != null) {
@@ -100,14 +109,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   maxLines: widget.maxLines,
                   maxLength: widget.maxLength,
                   maxLengthEnforced: widget.maxLength != null,
-                  style: widget.textStyle ?? subtitle1.copyWith(
-                    color: widget.textColor,
-                  ),
+                  style: widget.textStyle ??
+                      schemeTitle1.copyWith(
+                        color: widget.textColor,
+                      ),
                   textCapitalization: widget.textCapitalization,
                   cursorColor: widget.activeBorderColor,
                   keyboardType: widget.textInputType,
                   controller: widget.currencyController ?? widget.controller,
                   focusNode: focusNode,
+                  enabled: widget.enabled,
                   inputFormatters: widget.inputFormatters,
                   textInputAction: widget.textInputAction,
                   obscureText: widget.obscureText,
@@ -134,7 +145,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   inputDecorationNoIcon() {
     return InputDecoration(
-        labelStyle:widget.textStyle ??  subtitle1.copyWith(color: widget.hintColor,),
+        labelStyle: widget.textStyle ??
+            schemeTitle1.copyWith(
+              color: widget.hintColor,
+            ),
         enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: widget.borderColor, width: widget.borderWidth)),
         focusedBorder: OutlineInputBorder(
@@ -152,7 +166,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
           color:
               focusNode != null && focusNode.hasFocus ? widget.activeBorderColor : widget.hintColor,
         ),
-        labelStyle:widget.textStyle ??  subtitle1.copyWith(color: widget.hintColor,),
+        labelStyle: widget.textStyle ??
+            schemeTitle1.copyWith(
+              color: widget.hintColor,
+            ),
         enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: widget.borderColor, width: widget.borderWidth)),
         focusedBorder: OutlineInputBorder(

@@ -2,9 +2,9 @@ import 'package:boxicons_flutter/boxicons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:scheme_package/scheme_package.dart';
 import 'package:scheme_package/src/global_widgets/auto_size_text.dart';
-import 'package:scheme_package/src/global_widgets/profile_image.dart';
+import 'package:scheme_package/src/global_widgets/images/profile_image.dart';
 import 'package:scheme_package/src/ui/styles.dart';
-import 'package:scheme_package/src/utils/constants.dart';
+import 'package:scheme_theme/scheme_theme.dart';
 
 class DropDownFormField extends FormField<dynamic> {
 	final String titleText;
@@ -30,9 +30,14 @@ class DropDownFormField extends FormField<dynamic> {
 	final bool enabled;
 	final bool alignDropdown;
 	final String imageUrl;
+	final bool isDense;
+	final bool isExpanded;
+	final double imageSize;
 	DropDownFormField(
 			{this.imageUrl,
 				this.enabled,
+				this.isDense = true,
+				this.isExpanded = true,
 				this.borderColor,
 				this.activeColor = Colors.blue,
 				FormFieldSetter<dynamic> onSaved,
@@ -55,6 +60,7 @@ class DropDownFormField extends FormField<dynamic> {
 				this.selectedColor,
 				this.hintColor,
 				this.borderWidth = 1,
+				this.imageSize,
 				this.onChanged,
 				this.borderRadius = const BorderRadius.all(Radius.circular(4)),
 			}) : super(
@@ -93,20 +99,21 @@ class DropDownFormField extends FormField<dynamic> {
 										Boxicons.bxChevronDown,
 										color: hintColor,
 									),
-									isExpanded: true,
-									isDense: true,
+									isExpanded: isExpanded,
+									isDense: isDense,
 									hint: imageUrl != null
 											? inputWithImage(
 											imageUrl: imageUrl,
 											hintColor: hintColor,
 											hintStyle: hintStyle,
+											imageSize: imageSize,
 											hintText: hintText)
 											: AutoSizeText(
 										hintText,
 										maxLines: 1,
 										style: hintStyle != null
 												? hintStyle.copyWith(color: hintColor)
-												: subtitle1.copyWith(color: hintColor),
+												: schemeTitle1.copyWith(color: hintColor),
 									),
 									value: value == '' ? null : value,
 									onChanged: enabled
@@ -118,9 +125,8 @@ class DropDownFormField extends FormField<dynamic> {
 									items: dataSource.map((item) {
 										return DropdownMenuItem<dynamic>(
 											value: item[valueField],
-											child: Container(
-												height: 60,
-												padding: EdgeInsets.only(left: 8, right: 8),
+											child: Container(height: 60,
+												padding: EdgeInsets.only(left: 0, right: 0),
 												decoration: BoxDecoration(
 														color: hintText == item[textField]
 																? Colors.grey.withOpacity(0.25)
@@ -130,7 +136,8 @@ class DropDownFormField extends FormField<dynamic> {
 													children: <Widget>[
 														imageUrl != null
 																? ProfileImage(
-															url: imageUrl,
+															url: item[valueField].url ?? placeholder,
+															boxShadow: normalShadow,
 															size: 24,
 														)
 																: AnimatedOpacity(
@@ -142,16 +149,17 @@ class DropDownFormField extends FormField<dynamic> {
 																width: 10,
 																decoration: BoxDecoration(
 																		borderRadius: BorderRadius.circular(5),
-																		gradient: createGradient(color: activeColor)),
+																		gradient: schemeGradient(color: activeColor)),
 															),
 														),
 														SizedBox(
-															width: 16,
+															width: 10,
 														),
-														AutoSizeText(
-															item[textField] ?? '',
-															style:hintStyle ?? subtitle1,
-														),
+														Expanded(child: 	AutoSizeText(
+															item[textField] ?? '',maxLines: 1,
+															style:hintStyle ?? schemeTitle1,
+														),)
+
 													],
 												),
 											),
@@ -166,26 +174,6 @@ class DropDownFormField extends FormField<dynamic> {
 		},
 	);
 
-	static inputWithImage({String imageUrl, String hintText, TextStyle hintStyle, Color hintColor}) {
-		return Row(mainAxisAlignment: MainAxisAlignment.start,
-			children: <Widget>[
-				ProfileImage(
-					size: 32,
-					url: imageUrl,
-				),
-				SizedBox(
-					width: 24,
-				),
-				AutoSizeText(
-					hintText,
-					maxLines: 1,
-					style: hintStyle != null
-							? hintStyle.copyWith(color: hintColor)
-							: subtitle1.copyWith(color: hintColor),
-				),
-			],
-		);
-	}
 
 	static setBorder(
 			{bool noBorder,
@@ -208,6 +196,29 @@ class DropDownFormField extends FormField<dynamic> {
 				: dataSource.indexOf(item) == dataSource.length - 1
 				? BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12))
 				: BorderRadius.circular(0);
+	}
+
+
+	static inputWithImage({String imageUrl, String hintText, TextStyle hintStyle, Color hintColor,double imageSize = 24}) {
+		return Row(mainAxisAlignment: MainAxisAlignment.start,
+			children: <Widget>[
+				ProfileImage(
+					size: imageSize,
+					url: imageUrl,
+					boxShadow: normalShadow,
+				),
+				SizedBox(
+					width: 16,
+				),
+				AutoSizeText(
+					hintText,
+					maxLines: 1,
+					style: hintStyle != null
+							? hintStyle.copyWith(color: hintColor)
+							: schemeTitle1.copyWith(color: hintColor),
+				),
+			],
+		);
 	}
 
 	static inputNoIcon(
@@ -241,7 +252,7 @@ class DropDownFormField extends FormField<dynamic> {
 					borderWidth: borderWidth,
 					hintColor: hintColor),
 			labelText: label,
-			labelStyle: subtitle1.copyWith(color: hintColor ?? Colors.white),
+			labelStyle: schemeTitle1.copyWith(color: hintColor ?? Colors.white),
 			filled: false,
 		);
 	}
@@ -283,7 +294,7 @@ class DropDownFormField extends FormField<dynamic> {
 					borderColor: borderColor,
 					hintColor: hintColor),
 			labelText: label,
-			labelStyle: subtitle1.copyWith(color: hintColor ?? Colors.white),
+			labelStyle: schemeTitle1.copyWith(color: hintColor ?? Colors.white),
 			filled: false,
 		);
 	}

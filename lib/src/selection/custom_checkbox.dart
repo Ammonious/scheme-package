@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:scheme_package/src/decorations/superellipse_shape.dart';
+import 'package:scheme_package/src/decorations/shapes/superellipse_shape.dart';
 import 'package:scheme_package/src/selection/selection_constants.dart';
-import 'package:scheme_package/src/utils/constants.dart';
+import 'package:scheme_theme/scheme_theme.dart';
 
 class GradientCheckbox extends StatelessWidget {
   final double size;

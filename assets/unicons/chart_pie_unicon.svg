@@ -1,0 +1,7 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="chart_pie">
+<path id="primary" d="M12 12V2C17.5229 2 22 6.47715 22 12H12Z" fill="#F9CA24" fill-opacity="0.4"/>
+<path id="accent" d="M12 12L17 20.6602C20.0924 18.8723 21.9978 15.5721 22 12H12V12Z" fill="#979797" fill-opacity="0.4"/>
+<path id="primary_2" d="M17 20.6602L12 12V2C6.47713 2.00184 2.00147 6.48047 2.0033 12.0033C2.00514 17.5262 6.48378 22.0018 12.0066 22C13.7599 21.9994 15.4822 21.5379 17.0008 20.6617L17.0042 20.6574L17 20.6602Z" fill="#F9CA24"/>
+</g>
+</svg>

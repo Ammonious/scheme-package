@@ -1,14 +1,17 @@
 
 import 'package:flutter/material.dart';
-import 'package:scheme_package/src/global_widgets/custom_image.dart';
-import 'package:scheme_package/src/utils/constants.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:scheme_package/src/global_widgets/images/custom_image.dart';
+import 'package:scheme_theme/scheme_theme.dart';
 import 'package:scheme_package/src/utils/scroll_methods.dart';
 
 import 'bubble_decoration.dart';
 import 'decoration_positioner.dart';
 
-class LogoDecoration extends StatefulWidget {
+class LogoDecoration extends HookWidget {
   final String imageUrl;
+  final String imagePath;
   final double width;
   final double height;
   final Color brandColor;
@@ -19,78 +22,67 @@ class LogoDecoration extends StatefulWidget {
   final double verticalPadding;
   final double horizontalPadding;
   final Color backgroundColor;
+  final bool enableAnimation;
+  final PublishSubject<double> scrollStream;
   LogoDecoration({
     Key key,
     this.imageUrl,
-    this.beginningOpacity = 0.35,
+    this.beginningOpacity = 0.15,
     this.horizontalPadding = -100,
     this.verticalPadding = -175,
     this.brandColor = Colors.blue,
     this.scrollController,
     this.enableOverlay = true,
-    this.position = BubblePosition.TopRight, this.backgroundColor = background, this.width = 24, this.height = 24,
+    this.position = BubblePosition.TopRight, this.backgroundColor = background, this.width = 24, this.height = 24, this.enableAnimation = true, this.imagePath, this.scrollStream,
   }) : super(key: key);
-
-  @override
-  _LogoDecorationState createState() => _LogoDecorationState();
-}
-
-class _LogoDecorationState extends State<LogoDecoration> {
-  ScrollController get scrollController => widget.scrollController ?? ScrollController();
-
-  double opacity = 0.35;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    opacity = widget.beginningOpacity;
-    scrollController.addListener(() {
-      opacityOnScroll(
-          scrollController: scrollController,
-          opacity: opacity,
-          onRefresh: (opacity) => setState(() {
-                this.opacity = opacity;
-              }));
-    });
-  }
+ 
+ 
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(duration: normalDuration,
+    final stream = useStream(scrollStream);
+    final opacity = stream != null && stream.hasData ? getOpacity(stream) : beginningOpacity;
+    return AnimatedContainer(duration: Duration(milliseconds: 200),
       child: Stack(
         children: <Widget>[
           DecorationPositionView(
-            horizontalPosition: widget.horizontalPadding,
-            verticalPosition: widget.verticalPadding,
-            position: widget.position,
+            horizontalPosition: horizontalPadding,
+            verticalPosition: verticalPadding,
+            position: position,
             child: CustomImage(
-              imageUrl: widget.imageUrl,
-              width: widget.width,
-              height: widget.height,
+              imageUrl: imageUrl,
+              imagePath: imagePath,
+              width: width,
+              height: height,
             ),
           ),
           DecorationPositionView(
-            child: Visibility(visible: widget.enableOverlay,
+            child: Visibility(visible: enableOverlay,
               child: AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                height: widget.height,
-                width: MediaQuery.of(context).size.width,
+                duration: normalDuration,
+                height: height,
+                width: width,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
-                    stops: [0.3, 1],
-                    colors: [widget.backgroundColor, widget.backgroundColor.withOpacity(opacity)],
+                    stops: [0.2,1],
+                    colors: [backgroundColor, backgroundColor.withOpacity(opacity)],
                   ),
                 ),
               ),
             ),
-            position: widget.position,
+            position: position,
             horizontalPosition: 0,
             verticalPosition: 0,
           )
         ],
       ),
     );
+  }
+  getOpacity(AsyncSnapshot<double> stream){
+    if(stream.data <= beginningOpacity) return beginningOpacity;
+
+    return stream.data;
   }
 }
